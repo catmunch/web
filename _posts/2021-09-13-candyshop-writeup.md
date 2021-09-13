@@ -1,3 +1,9 @@
+---
+layout: post
+title:  "CandyShop Writeup"
+categories: Writeup RCTF2021
+---
+
 ## CandyShop
 
 [Attachment](https://github.com/catmunch/oss/blob/master/CandyShop.zip?raw=true)
