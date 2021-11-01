@@ -54,3 +54,25 @@ Then just play the audio and decode with [NATO phonetic alphabet](https://en.wik
 4. Find that paper on [SIGBOVIK](http://sigbovik.org/2021/) and count. (btw it's really funny)
 
 5. Search `IETF Protocol Police` on google and you'll find the answer is `/dev/null`.![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101092314.png)
+
+## 旅行照片
+
+Note that there's a special blue KFC in the photo, so we can find that KFC first. Search `蓝色KFC` on Baidu, the first result is a KFC located in Qinhuangdao. We can then find it on Meituan to get more photos to ensure it's the one in the given photo.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101095430.png)
+
+So that's it.
+
+Search it on Baidu Map
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101095757.png)
+
+We got the phone number.
+
+Then we can use the street view feature to solve question 5.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101095932.png)
+
+Though the street view is old, we can infer that it's the same place from the pillar.
+
+The question 1&2 can easily solve by KFC location. And for question 3, count the floor of opposite building which has same height of sea level line in picture.
