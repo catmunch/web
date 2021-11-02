@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Hackergame 2021 Writeup Part 1(Easy level)"
+title: "Hackergame 2021 Writeup Part 1(Entry level)"
 categories: Writeup Hackergame
 ---
 
@@ -8,7 +8,7 @@ This part of writeup contains tasks that don't require experience in CTF&Linux.
 
 ## 签到
 
-The task requires to find a page of the diary which is written during contest, open the [link](http://202.38.93.111:10000/), and we'll find out that the page number in the URL params is exactly the [UNIX Timestamp](https://en.wikipedia.org/wiki/Unix_time) of the written time. So just find any converter then convert any time from 2021-10-23 12:00:00 to 2021-10-30 12:00:00 (UTC+8).
+The task requires to find a page of the diary which is written during the contest, open the [link](http://202.38.93.111:10000/) and we'll find out that the page number in the URL params is exactly the [UNIX Timestamp](https://en.wikipedia.org/wiki/Unix_time) of the written time. So just find any converter then convert any time from 2021-10-23 12:00:00 to 2021-10-30 12:00:00 (UTC+8).
 
 If you don't know the UNIX Timestamp before, you can also calculate manually.
 
@@ -27,7 +27,7 @@ b'flag{Y0U_SH0U1D_kn0w_H0W_t0_C0nv3rt_HEX_to_TexT}'
 
 ## 去吧！追寻自由的电波
 
-Task provides a pretty fast & high pitch voice file, and informs us it uses a method in radiotelephone field to distinguish similar pronunciation of letters.
+Task provides a pretty fast & high pitch voice file, and informs us it uses a method in radiotelephone field to distinguish similar pronunciations of letters.
 
 First, we should search for that method, just google like "how to say letters in radiotelephone", then we'll find [NATO phonetic alphabet](https://en.wikipedia.org/wiki/NATO_phonetic_alphabet). So the voice will basically contain some English words.
 
@@ -37,7 +37,7 @@ Next, let's deal with the voice file. Fast & high pitch, that's normally the res
 
 ![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101091135.png)
 
-2. Make sure not check the `Manage Audio Pitch` and slow down to ~50%
+2. Make sure not to check the `Manage Audio Pitch` and slow down to ~50%
 
 ![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101091319.png)
 
@@ -45,13 +45,13 @@ Then just play the audio and decode with [NATO phonetic alphabet](https://en.wik
 
 ## 猫咪问答 Pro Max
 
-1. Use websites like [web.archive.org](https://web.archive.org) or what to visit sec.ustc.edu.cn then you'll find it.
+1. Use websites like [web.archive.org](https://web.archive.org) or stuff to visit sec.ustc.edu.cn then you'll find it.
 
-2. The official writeup says you can check [here](https://lug.ustc.edu.cn/wiki/intro/), but during the contest it didn't update so the you may count as 4 times. So just enumerate the answer.
+2. The official writeup says you can check [here](https://lug.ustc.edu.cn/wiki/intro/), but during the contest it didn't update so you may count as 4 times. Alternatively, just enumerate the answer.
 
 3. Search `LUG @ USTC` on Google Images or `活动室` on lug.ustc.edu.cn
 
-4. Find that paper on [SIGBOVIK](http://sigbovik.org/2021/) and count. (btw it's really funny)
+4. Find that paper on [SIGBOVIK](http://sigbovik.org/2021/) and count it. (btw it's really funny)
 
 5. Search `IETF Protocol Police` on google and you'll find the answer is `/dev/null`.![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101092314.png)
 
@@ -75,4 +75,4 @@ Then we can use the street view feature to solve question 5.
 
 Though the street view is old, we can infer that it's the same place from the pillar.
 
-The question 1&2 can easily solve by KFC location. And for question 3, count the floor of opposite building which has same height of sea level line in picture.
+The question 1&2 can easily solve by KFC location. And for question 3, count the floor of the opposite building which has the same height with sea level line in picture.
