@@ -2,6 +2,7 @@
 layout: post
 title: "Hackergame 2021 Writeup Part 2(Easy level)"
 categories: Writeup Hackergame
+katex: True
 ---
 
 This part of writeup contains tasks that require a bit programming & linux experience.

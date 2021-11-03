@@ -33,6 +33,7 @@ remote_theme: daattali/beautiful-jekyll@5.0.0
 plugins:
   - jekyll-feed
   - jekyll-remote-theme
+  - jekyll-katex
 
 markdown: kramdown
 kramdown:
