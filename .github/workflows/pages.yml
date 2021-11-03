@@ -12,5 +12,5 @@ jobs:
       - uses: actions/checkout@v2
       - uses: helaili/jekyll-action@v2
         with:
-          pre_build_commands: apt update && apt install -y nodejs
+          pre_build_commands: apk add nodejs
           token: ${{ secrets.GITHUB_TOKEN }}
