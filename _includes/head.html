@@ -4,19 +4,19 @@
 
   {% capture title %}
     {%- if page.share-title -%}
-      {{ page.share-title | strip_html | xml_escape }}
+      {{ page.share-title }}
     {%- elsif page.title -%}
-      {{ page.title | strip_html | xml_escape  }}
+      {{ page.title }}
     {%- else -%}
-      {{ site.title | strip_html | xml_escape }}
+      {{ site.title }}
     {%- endif -%}
   {% endcapture %}
 
   {% capture description %}
     {%- if page.share-description -%}
-      {{ page.share-description | strip_html | xml_escape }}
+      {{ page.share-description }}
     {%- elsif page.subtitle -%}
-      {{ page.subtitle | strip_html | xml_escape }}
+      {{ page.subtitle }}
     {%- else -%}
       {%- assign excerpt_length = site.excerpt_length | default: 50 -%}
       {{ page.content | strip_html | xml_escape | truncatewords: excerpt_length | strip }}
@@ -39,14 +39,11 @@
   <meta name="keywords" content="{{ site.keywords }}">
   {% endif %}
 
-  {% if site.rss-description %}
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | absolute_url }}">
-  {% endif %}
 
   {% include gtag.html %}
   {% include gtm_head.html %}
   {% include google_analytics.html %}
-  {% include cloudflare_analytics.html %}
 
   {% if layout.common-ext-css %}
     {% for css in layout.common-ext-css %}
