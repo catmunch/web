@@ -284,3 +284,203 @@ cat day2/flag.txt
 ```
 
 ## 阵列恢复大师
+
+### RAID-5
+
+First, we should know [how RAID-5 work](https://en.wikipedia.org/wiki/Standard_RAID_levels#RAID_5).
+
+Then we can get RAID-5 parameters(block size, layout) manually. View these images with a hex editor.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105082446.webp)
+
+There's a `EFI PART` signature, so we can infer that this disk is using GPT. And this will only occur in the beginning of the logical disk, so we can know that in `3Rl` and `60k`, one is the first data disk, and another is the first parity disk.
+
+|3D8|3Rl|60k|IrY|QjT|
+|-------------------|
+|   |1/P|1/P|   |   |
+
+Then we scroll down to 00250000, that's where plain text begins, so maybe we can get the order here.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105083958.webp)
+
+Three disks are plain text, but `3D8` is something we don't understand, and QjT is null bytes here.
+
+Doing some calculation, we'll find out that `3D8@250000` is actually the xor parity block of other disks. Then let's scroll down and see when will the parity block end.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105091417.webp)
+
+It ends at 00260000. So the block size is 10000h = 64KB.
+
+Then how can we know the order? Let's observe the parity block moving pattern first.
+
+Using the same method, we can get such information.
+
+|start addr|3D8|3Rl|60k|IrY|QjT|
+|------------------------------|
+|000000| |1/P|1/P|   |   |
+|......| | | | | |
+|250000|P| | | | |
+|260000| | | |P| |
+|270000| |P| | | |
+|280000| | |P| | |
+|290000| | | | |P|
+|2A0000|P| | | | |
+|2B0000| | | |P| |
+|2C0000| |P| | | |
+|2D0000| | |P| | |
+|2E0000| | | | |P|
+
+And we can also work out the parity block at 000000.
+
+|start addr|3D8|3Rl|60k|IrY|QjT|
+|------------------------------|
+|000000| |1|P|   |   |
+|......| | | | | |
+|250000|P| | | | |
+|260000| | | |P| |
+|270000| |P| | | |
+|280000| | |P| | |
+|290000| | | | |P|
+|2A0000|P| | | | |
+|2B0000| | | |P| |
+|2C0000| |P| | | |
+|2D0000| | |P| | |
+|2E0000| | | | |P|
+
+Referring to [RAID Layout](http://www.reclaime-pro.com/posters/raid-layouts.pdf), there are two possible ways to rebuild currently.
+
+- 64KB, left symmetric, order: `3RI`,`IrY`,`3D8`,`QjT`,`60k`
+- 64KB, left asymmetric, order: `3RI`,`IrY`,`3D8`,`QjT`,`60k`
+
+Let's rearrange these disks for further checks.
+
+|start addr|3Rl|IrY|3D8|QjT|60k|
+|------------------------------|
+|000000|1| | | |P|
+|......| | | | | |
+|250000| | |P| | |
+|260000| |P| | | |
+|270000|P| | | | |
+|280000| | | | |P|
+|290000| | | |P| |
+|2A0000| | |P| | |
+|2B0000| |P| | | |
+|2C0000|P| | | | |
+|2D0000| | | | |P|
+|2E0000| | | |P| |
+
+Remember the plain text content? We can use it to find out the actual way. It looks like GRUB makefile, so let's find it on the Internet.
+
+[Here](https://git.parrotsec.org/packages/debian/grub2/-/raw/upstream/Makefile.in) it is.
+
+Then we just need to find if the data block after QjT@280000 is 60k@290000 (left symmetric) or 3Rl@290000 (left asymmetric).
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105100347.webp)
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105100412.png)
+
+So it should be left symmetric.
+
+Then we can use DiskGenius to rebuild it.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105100911.webp)
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105101033.webp)
+
+Then we can export and get flag.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105101358.webp)
+
+### RAID-0
+
+Similarly, open all the images with hex editor.
+
+And the `EFI PART` signature appears in `wlO`, so it's the first disk.
+
+Then we browse this disk, found out there are some data before 1DFFF0 but immediately stops at 1E0000. So we can infer that it's a block end.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105101955.webp)
+
+Let's jump every disk to 1DFFF0.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105102255.webp)
+
+Only `jCC` and `1GH` have data.
+
+In RAID-0, data distributes like this:
+
+|Disk 1|Disk 2|Disk 3|Disk 4|
+|---------------------------|
+|1|2|3|4|
+|5|6|7|8|
+|9|10|11|12|
+
+So it means `jCC` and `1GH` should be Disk 2 & 3, though we don't know exactly which one should be in which place.
+
+But it shouldn't end immediately, if the data size isn't exactly the multiples of block size.
+
+So let's jump backwards in other disks.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105103232.webp)
+
+Only the disk `5qi` has data in 1C0000~1DFFF0. So it should be the Disk 4. And we can infer from this that the block size is 20000h = 128KB.
+
+Let's find more information.
+
+Surprisingly, there's some plain text at `wlO@8C0000`. Similarly, let's jump every disk to that position.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105104010.webp)
+
+Only `ID7` has something before 8C0000, so that should be the Disk 8 according to RAID-0 structure.
+
+Now we know:
+
+|Disk 1|Disk 2|Disk 3|Disk 4|Disk 5|Disk 6|Disk 7|Disk 8|
+|-------------------------------------------------------|
+|wlO|jCC/1GH|jCC/1GH|5qi| | | |ID7|
+
+Then let's try if we can decide the order of other disks.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105104458.webp)
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105104702.webp)
+
+Here, `jCC` is more likely to be Disk 2, and `1GH` is more likely to be Disk 3.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105105009.webp)
+
+And `d3B` should be Disk 5.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105105457.webp)
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105105614.webp)
+
+`eRL` should be Disk 6, and `RAp` should be Disk 7.
+
+So that's all, the order is:
+
+|Disk 1|Disk 2|Disk 3|Disk 4|Disk 5|Disk 6|Disk 7|Disk 8|
+|-------------------------------------------------------|
+|wlO|jCC|1GH|5qi|d3B|eRL|RAp|ID7|
+
+Rebuild in DiskGenius
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105105951.webp)
+
+But we can't see any files in it. Go to `Sector Editor`, the head of this partition is XFSB, so that means its filesystem is XFS. DiskGenius doesn't support this filesystem, then we need to mount it in Linux.
+
+Clone the virtual RAID to a blank image.
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105111055.webp)
+
+Then use the following commands in linux:
+
+```shell
+mkdir raid0
+sudo losetup -P /dev/loop100 awa.img
+sudo mount -t xfs /dev/loop100p1 raid0
+cd raid0
+python3 getflag.py
+```
+
+![](https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211105111842.png)
+
+Finally, we got the flag.
