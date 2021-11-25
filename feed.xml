@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    
+    <title>Cat Munch</title>
+    
+    
+    <link>/web</link>
+    <atom:link href="/web/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+      <item>
+        <title>Hackergame 2021 Writeup Part 2(Easy level)</title>
+        <description>
+          
+          This part of writeup contains tasks that require a bit programming &amp;amp; linux experience. 卖瓜 It’s obvious that, you can’t get exactly 20 with some 6 and 9. So there must be some magic that can help us achieve it. As the task said, if the result becomes a float...
+        </description>
+        <pubDate>Mon, 01 Nov 2021 00:00:00 +0000</pubDate>
+        <link>/web/writeup/hackergame/2021/11/01/hackergame2021-writeup-part-2.html</link>
+        <guid isPermaLink="true">/web/writeup/hackergame/2021/11/01/hackergame2021-writeup-part-2.html</guid>
+      </item>
+    
+      <item>
+        <title>Hackergame 2021 Writeup Part 1(Entry level)</title>
+        <description>
+          
+          This part of writeup contains tasks that don’t require experience in CTF&amp;amp;Linux. 签到 The task requires to find a page of the diary which is written during the contest, open the link and we’ll find out that the page number in the URL params is exactly the UNIX Timestamp of...
+        </description>
+        <pubDate>Mon, 01 Nov 2021 00:00:00 +0000</pubDate>
+        <link>/web/writeup/hackergame/2021/11/01/hackergame2021-writeup-part-1.html</link>
+        <guid isPermaLink="true">/web/writeup/hackergame/2021/11/01/hackergame2021-writeup-part-1.html</guid>
+      </item>
+    
+      <item>
+        <title>CandyShop Writeup</title>
+        <description>
+          
+          CandyShop Attachment Read the source code of the website, we’ll find out that it’s driven by express.js &amp;amp; pug template engine. Then we’ll find out the wrong usage of pug in the code: src/routes/shop.js router.post('/order', checkLogin, checkActive, async (req, res) =&amp;gt; { let {username, candyname, address} = req.body let tpl_path...
+        </description>
+        <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
+        <link>/web/writeup/rctf2021/2021/09/13/candyshop-writeup.html</link>
+        <guid isPermaLink="true">/web/writeup/rctf2021/2021/09/13/candyshop-writeup.html</guid>
+      </item>
+    
+  </channel>
+</rss>

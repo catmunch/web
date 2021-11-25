@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Beautiful Jekyll 5.0.0 | Copyright Dean Attali 2020 -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+
+  
+
+  <title>Hackergame 2021 Writeup Part 1(Entry level)</title>
+
+  
+
+  <meta name="description" content="This part of writeup contains tasks that don’t require experience in CTF&amp;amp;Linux. 签到 The task requires to find a page of the diary which is written during the contest, open the link and we’ll find out that the page number in the URL params is exactly the UNIX Timestamp of...">
+
+  
+
+  
+
+  <link rel="alternate" type="application/rss+xml" title="Cat Munch" href="/web/feed.xml">
+
+  
+
+  
+
+  
+
+
+  
+    
+      
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    
+      
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+
+
+    
+      
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+
+    
+  
+
+  
+    
+      <link rel="stylesheet" href="/web/assets/css/bootstrap-social.css">
+    
+      <link rel="stylesheet" href="/web/assets/css/beautifuljekyll.css">
+    
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  <meta property="og:site_name" content="Cat Munch">
+  <meta property="og:title" content="Hackergame 2021 Writeup Part 1(Entry level)">
+  <meta property="og:description" content="This part of writeup contains tasks that don’t require experience in CTF&amp;amp;Linux. 签到 The task requires to find a page of the diary which is written during the contest, open the link and we’ll find out that the page number in the URL params is exactly the UNIX Timestamp of...">
+
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:article:author" content="">
+  <meta property="og:article:published_time" content="2021-11-01T00:00:00+00:00">
+  <meta property="og:url" content="/web/writeup/hackergame/2021/11/01/hackergame2021-writeup-part-1.html">
+  <link rel="canonical" href="/web/writeup/hackergame/2021/11/01/hackergame2021-writeup-part-1.html">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  
+  <meta name="twitter:site" content="@">
+  <meta name="twitter:creator" content="@">
+
+  <meta property="twitter:title" content="Hackergame 2021 Writeup Part 1(Entry level)">
+  <meta property="twitter:description" content="This part of writeup contains tasks that don’t require experience in CTF&amp;amp;Linux. 签到 The task requires to find a page of the diary which is written during the contest, open the link and we’ll find out that the page number in the URL params is exactly the UNIX Timestamp of...">
+
+  
+
+  
+
+
+  
+
+  
+
+</head>
+
+
+<body>
+
+  
+
+
+  <nav class="navbar navbar-expand-md navbar-light fixed-top navbar-custom top-nav-regular"><a class="navbar-brand" href="/web">Cat Munch</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="main-navbar">
+    <ul class="navbar-nav ml-auto"></ul>
+  </div>
+
+  
+
+</nav>
+
+
+  <!-- TODO this file has become a mess, refactor it -->
+
+
+
+
+
+
+
+<header class="header-section ">
+
+<div class="intro-header no-img">
+  <div class="container-md">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+        <div class="post-heading">
+          <h1>Hackergame 2021 Writeup Part 1(Entry level)</h1>
+          
+
+          
+            <span class="post-meta">Posted on November 1, 2021</span>
+            
+            
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+
+
+
+
+<div class=" container-md ">
+  <div class="row">
+    <div class=" col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 ">
+
+      
+
+      
+
+      <article role="main" class="blog-post">
+        <p>This part of writeup contains tasks that don’t require experience in CTF&amp;Linux.</p>
+
+<h2 id="签到">签到</h2>
+
+<p>The task requires to find a page of the diary which is written during the contest, open the <a href="http://202.38.93.111:10000/">link</a> and we’ll find out that the page number in the URL params is exactly the <a href="https://en.wikipedia.org/wiki/Unix_time">UNIX Timestamp</a> of the written time. So just find any converter then convert any time from 2021-10-23 12:00:00 to 2021-10-30 12:00:00 (UTC+8).</p>
+
+<p>If you don’t know the UNIX Timestamp before, you can also calculate manually.</p>
+
+<h2 id="进制十六参上">进制十六——参上</h2>
+
+<p>In the screenshot, only the decoded part is pixelated, but remains all hex part. As it’s encoded with ASCII (inferred from the previous characters), we can simply decode the hex numbers then we can get flag.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Python</span> <span class="mf">3.9</span><span class="p">.</span><span class="mi">7</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Sep</span>  <span class="mi">3</span> <span class="mi">2021</span><span class="p">,</span> <span class="mi">12</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">55</span><span class="p">)</span> 
+<span class="p">[</span><span class="n">Clang</span> <span class="mf">12.0</span><span class="p">.</span><span class="mi">5</span> <span class="p">(</span><span class="n">clang</span><span class="o">-</span><span class="mf">1205.0</span><span class="p">.</span><span class="mf">22.9</span><span class="p">)]</span> <span class="n">on</span> <span class="n">darwin</span>
+<span class="n">Type</span> <span class="s">"help"</span><span class="p">,</span> <span class="s">"copyright"</span><span class="p">,</span> <span class="s">"credits"</span> <span class="ow">or</span> <span class="s">"license"</span> <span class="k">for</span> <span class="n">more</span> <span class="n">information</span><span class="p">.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mh">0x666C61677B5930555F5348305531445F6B6E30775F4830575F74305F43306E763372745F4845585F746F5F546578547D</span><span class="p">).</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span><span class="s">'big'</span><span class="p">)</span>
+<span class="sa">b</span><span class="s">'flag{Y0U_SH0U1D_kn0w_H0W_t0_C0nv3rt_HEX_to_TexT}'</span>
+<span class="o">&gt;&gt;&gt;</span> 
+</code></pre></div></div>
+
+<h2 id="去吧追寻自由的电波">去吧！追寻自由的电波</h2>
+
+<p>Task provides a pretty fast &amp; high pitch voice file, and informs us it uses a method in radiotelephone field to distinguish similar pronunciations of letters.</p>
+
+<p>First, we should search for that method, just google like “how to say letters in radiotelephone”, then we’ll find <a href="https://en.wikipedia.org/wiki/NATO_phonetic_alphabet">NATO phonetic alphabet</a>. So the voice will basically contain some English words.</p>
+
+<p>Next, let’s deal with the voice file. Fast &amp; high pitch, that’s normally the result of basic audio speed changing. You may ask, ah why when I speed up audios, the pitch doesn’t change? It’s just because modern editors such as Final Cut Pro / iMovie will automatically help you correct the pitch after changing speed. So we should find an editor which has the option to disable the auto-correction feature. As far as i know, Adobe Premiere Pro does. So let’s take it as an example.</p>
+
+<ol>
+  <li>Drag the audio into timeline, right click it, and choose <code class="language-plaintext highlighter-rouge">Speed/Duration</code>
+</li>
+</ol>
+
+<p><img src="https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101091135.png" alt=""></p>
+
+<ol>
+  <li>Make sure not to check the <code class="language-plaintext highlighter-rouge">Manage Audio Pitch</code> and slow down to ~50%</li>
+</ol>
+
+<p><img src="https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101091319.png" alt=""></p>
+
+<p>Then just play the audio and decode with <a href="https://en.wikipedia.org/wiki/NATO_phonetic_alphabet">NATO phonetic alphabet</a>. You’ll get the flag.</p>
+
+<h2 id="猫咪问答-pro-max">猫咪问答 Pro Max</h2>
+
+<ol>
+  <li>
+    <p>Use websites like <a href="https://web.archive.org">web.archive.org</a> or stuff to visit sec.ustc.edu.cn then you’ll find it.</p>
+  </li>
+  <li>
+    <p>The official writeup says you can check <a href="https://lug.ustc.edu.cn/wiki/intro/">here</a>, but during the contest it didn’t update so you may count as 4 times. Alternatively, just enumerate the answer.</p>
+  </li>
+  <li>
+    <p>Search <code class="language-plaintext highlighter-rouge">LUG @ USTC</code> on Google Images or <code class="language-plaintext highlighter-rouge">活动室</code> on lug.ustc.edu.cn</p>
+  </li>
+  <li>
+    <p>Find that paper on <a href="http://sigbovik.org/2021/">SIGBOVIK</a> and count it. (btw it’s really funny)</p>
+  </li>
+  <li>
+    <p>Search <code class="language-plaintext highlighter-rouge">IETF Protocol Police</code> on google and you’ll find the answer is <code class="language-plaintext highlighter-rouge">/dev/null</code>.<img src="https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101092314.png" alt=""></p>
+  </li>
+</ol>
+
+<h2 id="旅行照片">旅行照片</h2>
+
+<p>Note that there’s a special blue KFC in the photo, so we can find that KFC first. Search <code class="language-plaintext highlighter-rouge">蓝色KFC</code> on Baidu, the first result is a KFC located in Qinhuangdao. We can then find it on Meituan to get more photos to ensure it’s the one in the given photo.</p>
+
+<p><img src="https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101095430.png" alt=""></p>
+
+<p>So that’s it.</p>
+
+<p>Search it on Baidu Map</p>
+
+<p><img src="https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101095757.png" alt=""></p>
+
+<p>We got the phone number.</p>
+
+<p>Then we can use the street view feature to solve question 5.</p>
+
+<p><img src="https://catmeowimg.oss-cn-chengdu.aliyuncs.com/img/20211101095932.png" alt=""></p>
+
+<p>Though the street view is old, we can infer that it’s the same place from the pillar.</p>
+
+<p>The question 1&amp;2 can easily solve by KFC location. And for question 3, count the floor of the opposite building which has the same height with sea level line in picture.</p>
+
+      </article>
+
+      
+
+      
+
+      
+
+      <ul class="pagination blog-pager">
+        
+        <li class="page-item previous">
+          <a class="page-link" href="/web/writeup/rctf2021/2021/09/13/candyshop-writeup.html" data-toggle="tooltip" data-placement="top" title="CandyShop Writeup">← Previous Post</a>
+        </li>
+        
+        
+        <li class="page-item next">
+          <a class="page-link" href="/web/writeup/hackergame/2021/11/01/hackergame2021-writeup-part-2.html" data-toggle="tooltip" data-placement="top" title="Hackergame 2021 Writeup Part 2(Easy level)">Next Post →</a>
+        </li>
+        
+      </ul>
+      
+
+    </div>
+  </div>
+</div>
+
+
+  <footer>
+  <div class="container-md beautiful-jekyll-footer">
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
+      <ul class="list-inline text-center footer-links"></ul>
+
+      
+      <p class="copyright text-muted">
+      
+      2021
+
+      
+
+      
+      </p>
+      <!-- Please don't remove this, keep my open source work credited :) -->
+      <p class="theme-by text-muted">
+        Powered by
+        <a href="https://beautifuljekyll.com">Beautiful Jekyll</a>
+      </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  
+  
+    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+  
+    
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+  
+
+
+
+  
+    <!-- doing something a bit funky here because I want to be careful not to include JQuery twice! -->
+    
+      <script src="/web/assets/js/beautifuljekyll.js"></script>
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>
